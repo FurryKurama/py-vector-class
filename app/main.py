@@ -9,7 +9,8 @@ class Vector:
                  x_cord: Union[float, int],
                  y_cord: Union[float, int]
                  ) -> None:
-        if not isinstance(x_cord, (float, int)) or not isinstance(y_cord, (float, int)):
+        if (not isinstance(x_cord, (float, int))
+                or not isinstance(y_cord, (float, int))):
             raise TypeError(
                 f"Vector expecting only int or float, got:\n"
                 f"""{'' if isinstance(x_cord, (float, int)) else
@@ -33,15 +34,21 @@ class Vector:
             )
         return Vector(other, other)
 
-    def __add__(self, other: Union[Vector, float, int]) -> Vector:
+    def __add__(self,
+                other: Union[Vector, float, int]
+                ) -> Vector:
         other = self.check_other(other)
         return Vector(self.x + other.x, self.y + other.y)
 
-    def __sub__(self, other: Union[Vector, float, int]) -> Vector:
+    def __sub__(self,
+                other: Union[Vector, float, int]
+                ) -> Vector:
         other = self.check_other(other)
         return Vector(self.x - other.x, self.y - other.y)
 
-    def __mul__(self, other: Union[Vector, float, int]) -> Union[Vector, float]:
+    def __mul__(self,
+                other: Union[Vector, float, int]
+                ) -> Union[Vector, float]:
         if isinstance(other, Vector):
             return self.x * other.x + self.y * other.y
         elif isinstance(other, (float, int)):
@@ -53,30 +60,32 @@ class Vector:
                 f"got: {type(other).__name__}"
             )
 
-
     @staticmethod
     def create_vector_by_two_points(start_point: list,
-                                    end_point: list) -> Vector:
+                                    end_point: list
+                                    ) -> Vector:
         return Vector(end_point[0] - start_point[0],
                       end_point[1] - start_point[1])
 
-    def get_length(self):
+    def get_length(self) -> float:
         return (self.x ** 2 + self.y ** 2) ** 0.5
 
     def get_normalized(self) -> Vector:
 
         length = self.get_length()
         if length == 0:
-            raise ValueError(">>> cannot normalize a zero vector")
+            raise ValueError(
+                ">>> cannot normalize a zero vector")
         return Vector(self.x / length, self.y / length)
 
-    def angle_between(self, other: Vector):
+    def angle_between(self, other: Vector) -> int:
         other = self.check_other(other)
         self_length = self.get_length()
         other_length = other.get_length()
 
-        if self_length == 0 or  other_length == 0:
-            raise ValueError(">>> Cannot compute angle with zero-length vector")
+        if self_length == 0 or other_length == 0:
+            raise ValueError(
+                ">>> Cannot compute angle with zero-length vector")
         cos_theta = (self * other) / (self_length * other_length)
         cos_theta = max(min(cos_theta, 1), -1)
 
@@ -84,17 +93,18 @@ class Vector:
         angle_deg = math.degrees(angle_rad)
         return round(angle_deg)
 
-    def get_angle(self):
+    def get_angle(self) -> int:
         length = self.get_length()
         if length == 0:
-            raise ValueError(">>> Cannot compute angle with zero-length vector")
+            raise ValueError(
+                ">>> Cannot compute angle with zero-length vector")
 
         cos_theta = self.y / length
         cos_theta = max(min(cos_theta, 1), -1)
 
         angle_rad = math.acos(cos_theta)
         angle_deg = math.degrees(angle_rad)
-        return round(angle_deg, 0)
+        return round(angle_deg)
 
     def rotate(self, degrees: float) -> Vector:
         radians = math.radians(degrees)
